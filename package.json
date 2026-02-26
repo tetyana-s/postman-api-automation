@@ -1,0 +1,12 @@
+{
+  "name": "e2e-api-postman-ecommerce",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test:api": "newman run postman/collections/ecommerce_e2e_api_tests.postman_collection.json -e postman/environments/local.postman_environment.json --reporters cli,htmlextra --reporter-htmlextra-export reports/report.html"
+  },
+  "devDependencies": {
+    "newman": "^6.0.0",
+    "newman-reporter-htmlextra": "^1.23.1"
+  }
+}
