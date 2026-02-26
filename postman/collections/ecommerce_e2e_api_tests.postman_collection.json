@@ -1,0 +1,497 @@
+{
+  "info": {
+    "_postman_id": "18627065-7214-4aa5-9e3d-42412e6e1ed8",
+    "name": "E-commerce E2E API test",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52672175",
+    "_collection_link": "https://go.postman.co/collection/52672175-18627065-7214-4aa5-9e3d-42412e6e1ed8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth - Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Login succeeded\", () => {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "",
+              "pm.environment.set(\"token\", json.token);",
+              "pm.environment.set(\"userId\", json.id);",
+              "",
+              "// Debug",
+              "console.log(\"Saved userId =\", pm.environment.get(\"userId\"));",
+              "console.log(\"Saved token =\", pm.environment.get(\"token\"));",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/ecmascript",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "username",
+              "value": "{{username}}",
+              "type": "text",
+              "uuid": "1745d3a9-556a-4a61-adf8-7129d79cb6ee"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "text",
+              "uuid": "492d5712-4435-4e38-9bd8-f4dcef8a2a23"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Users - Get current user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Authorized user profile returned\", () => {",
+              "  pm.response.to.have.status(200);",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property(\"id\");",
+              "  pm.expect(String(json.id)).to.eql(String(pm.environment.get(\"userId\")));",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/me",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "me"
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Products - List/Search",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Products returned\", () => {",
+              "  pm.response.to.have.status(200);",
+              "  const json = pm.response.json();",
+              "  pm.expect(json).to.have.property(\"products\");",
+              "  pm.expect(json.products).to.be.an(\"array\").that.is.not.empty;",
+              "",
+              "  pm.environment.set(\"productId\", json.products[0].id);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/search?q=phone",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "q",
+              "value": "phone"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Products - Get single product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Product details returned\", () => {",
+              "  pm.response.to.have.status(200);",
+              "  const p = pm.response.json();",
+              "  pm.expect(p).to.have.property(\"id\");",
+              "  pm.expect(String(p.id)).to.eql(String(pm.environment.get(\"productId\")));",
+              "  pm.expect(p).to.have.property(\"price\");",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/{{productId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cart - Create cart",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Cart created (201)\", () => {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "",
+              "// Debug: see what came back",
+              "console.log(\"Create cart response:\", json);",
+              "",
+              "pm.test(\"Cart response has id\", () => {",
+              "  pm.expect(json).to.have.property(\"id\");",
+              "});",
+              "",
+              "// Save cartId",
+              "//pm.environment.set(\"cartId\", json.id);",
+              "//Save cartId as a harcoded value since adding a new cart will not add it into the server",
+              "pm.environment.set(\"cartId\", \"1\");",
+              "",
+              "pm.test(\"cartId saved to environment\", () => {",
+              "  pm.expect(pm.environment.get(\"cartId\")).to.exist;",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": {{userId}},\n  \"products\": [\n    { \"id\": {{productId}}, \"quantity\": 1 }\n  ]\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/carts/add",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "carts",
+            "add"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cart- Get cart",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/carts/{{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "carts",
+            "{{userId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cart - Update cart",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Cart updated\", () => {",
+              "  pm.response.to.have.status(200);",
+              "  const cart = pm.response.json();",
+              "  const item = cart.products.find(x => x.id === Number(pm.environment.get(\"productId\")));",
+              "  pm.expect(item.quantity).to.eql(2);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"merge\": true,\n  \"products\": [\n    {\n      \"id\": {{productId}},\n      \"quantity\": 2\n    }\n  ]\n}\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/carts/{{cartId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "carts",
+            "{{cartId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Negative tests - Invalid login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Invalid login returns 400/401\", () => {",
+              "  pm.expect([400, 401]).to.include(pm.response.code);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "username",
+              "value": "demo_user",
+              "type": "text",
+              "uuid": "836ed1fb-7f79-4eea-ad4f-596272334f16"
+            },
+            {
+              "key": "password",
+              "value": "1234567",
+              "type": "text",
+              "uuid": "0ab9d70e-7404-46fa-8a47-9ba874554605"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Negative tests - Invalid product id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Invalid product returns 404\", () => {",
+              "  pm.expect(pm.response.code).to.eql(404);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/products/9999999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "9999999"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "requests": {},
+        "exec": [
+          "pm.globals.set(\"nowIso\", new Date().toISOString());",
+          "pm.variables.set(\"startTime\", Date.now());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "const elapsed = Date.now() - Number(pm.variables.get(\"startTime\"));",
+          "pm.test(\"Response time < 1500ms\", function () {",
+          "  pm.expect(elapsed).to.be.below(1500);",
+          "});",
+          "",
+          "pm.test(\"Has JSON content-type\", function () {",
+          "  pm.response.to.have.header(\"Content-Type\");",
+          "  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+          "});",
+          ""
+        ]
+      }
+    }
+  ]
+}
