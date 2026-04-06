@@ -65,6 +65,17 @@ After running the tests, open the generated HTML report:
 open reports/report.html
 ```
 
+### Example Report Screenshots
+Sample report screenshots are available in the `example_reports/` folder. These images show the generated summary, request details, and report UI for a completed test run.
+
+![Report Screenshot 1](example_reports/example-report-1.png)
+
+![Report Screenshot 2](example_reports/example-report-2.png)
+
+![Report Screenshot 3](example_reports/example-report-3.png)
+
+![Report Screenshot 4](example_reports/example-report-4.png)
+
 ## Configuration
 
 ### Environment Variables
